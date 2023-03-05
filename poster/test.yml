@@ -1,0 +1,27 @@
+# ユーザーごとに値が異なる場合に、ユーザーに指定してもらう
+config:
+  # rootはデフォルトでの値(ユーザーが設定しなければこの値になる)
+  MYSQL_USER: root
+  MYSQL_PASSWORD: root
+
+# ユーザーの設定が正しいかを確認するためのシナリオ
+check:
+  # Apache2などの値は、シナリオ設定者が項目ごとに分割するために設定する
+  Apache2:
+    # Apache2 内でテストする項目を記載する
+    # name : 確認項目の名前
+    - name: Apacheがインストールできているか確認
+      # 確認するためのコマンド
+      cmd: apache2 -v
+      # 複数の正規表現の「いずれかにマッチ」か「すべてにマッチ」を指定
+      # or または andを指定
+      regexp:
+        - type: or
+        # 正規表現
+        - list: ["Server version: Apache/"]
+      # 上記のコマンドを実行するディレクトリを指定
+      working-directory: /home/ubuntu
+      # 上記の正規表現にマッチしなかった場合に表示されるヒント
+      message: |
+        Apacheが正常にインストールできていない可能性があります。
+    
